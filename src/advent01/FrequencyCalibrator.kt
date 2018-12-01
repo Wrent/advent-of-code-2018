@@ -1,38 +1,36 @@
 package advent01
 
+import util.IteratorUtils.Companion.endlessIterator
 import java.lang.Long.parseLong
-import java.lang.RuntimeException
 
 class FrequencyCalibrator(var input: String) {
 
     fun getFrequency(): Long {
-        return parseInput(input).sum()
+        return parseInput().sum()
     }
 
     fun getFirstRepeatingFrequency(): Long {
         val set = HashSet<Long>()
-        val parsedInput = parseInput(input);
+        val parsedInput = parseInput()
 
-        var current = 0L;
+        var current = 0L
         set.add(current)
 
-        var i = 0;
-        while (true) {
-            current += getChange(i, parsedInput);
+        val endlessIterator = endlessIterator(parsedInput)
+
+        while (endlessIterator.hasNext()) {
+            val next = endlessIterator.next()
+            current += next
             if (set.contains(current)) {
-                return current;
+                return current
             }
-            set.add(current);
-            i++
+            set.add(current)
         }
+        throw RuntimeException("Endless iterator ended unexpectedly.")
     }
 
-    private fun getChange(i: Int, parsedInput: List<Long>): Long {
-        return parsedInput.get(i % parsedInput.size)
-    }
-
-    private fun parseInput(expressions: String): List<Long> {
-        val expressions = input.split("\n");
+    private fun parseInput(): List<Long> {
+        val expressions = input.split("\n")
         return expressions.map { parseLong(it) }
     }
 }

@@ -1,7 +1,7 @@
 package advent01
 
 import org.junit.jupiter.api.Disabled
-import util.Foo.Companion.readFileDirectlyAsText
+import util.FileUtils.Companion.readFileDirectlyAsText
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test as test
 
