@@ -5,7 +5,7 @@ import util.FileUtils.Companion.readFileDirectlyAsText
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test as test
 
-class FrequencyCalibratorTest() {
+internal class FrequencyCalibratorTest() {
     @test fun example1() {
         testCalibrator("+1\n-2\n+3\n+1", 3)
     }
