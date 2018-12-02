@@ -20,6 +20,20 @@ internal class BoxChecksumTest {
     }
 
     @test
+    fun example2LessEffective() {
+        assertEquals(
+            "fgij",
+            BoxChecksum().findTwoSimilarBoxesLessEffective("abcde\nfghij\nklmno\npqrst\nfguij\naxcye\nwvxyz")
+        )
+    }
+
+    @Disabled
+    @test
+    fun result2LessEffective() {
+        println(BoxChecksum().findTwoSimilarBoxesLessEffective(FileUtils.readFileDirectlyAsText("inputData/advent02_1.txt")))
+    }
+
+    @test
     fun example2() {
         assertEquals("fgij", BoxChecksum().findTwoSimilarBoxes("abcde\nfghij\nklmno\npqrst\nfguij\naxcye\nwvxyz"))
     }
