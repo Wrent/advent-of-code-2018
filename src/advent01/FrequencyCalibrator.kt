@@ -1,6 +1,6 @@
 package advent01
 
-import util.IteratorUtils.Companion.endlessIterator
+import common.IteratorUtils.Companion.endlessIterator
 import java.lang.Long.parseLong
 
 class FrequencyCalibrator(var input: String) {

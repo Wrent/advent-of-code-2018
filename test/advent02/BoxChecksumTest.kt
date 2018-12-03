@@ -1,8 +1,8 @@
 package advent02
 
+import common.FileUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Disabled
-import util.FileUtils
 import org.junit.jupiter.api.Test as test
 
 
