@@ -16,6 +16,12 @@ class Cell(val x: Int, val y: Int, serialNumber: Int) {
         power = tempPower
     }
 
+
+
+    override fun toString(): String {
+        return "Cell(x=$x, y=$y, power=$power)"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -29,13 +35,9 @@ class Cell(val x: Int, val y: Int, serialNumber: Int) {
     }
 
     override fun hashCode(): Int {
-        var result = x.hashCode()
-        result = 31 * result + y.hashCode()
+        var result = x
+        result = 31 * result + y
         return result
-    }
-
-    override fun toString(): String {
-        return "Cell(x=$x, y=$y, power=$power)"
     }
 
 
