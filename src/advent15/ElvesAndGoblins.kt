@@ -7,10 +7,10 @@ class ElvesAndGoblins(input: String) {
 
 
     init {
-        val rows = input.split("\n");
+        val rows = input.split("\n")
         rowsCnt = rows.size
         colsCnt = rows[0].length
-        cavern = Array(rowsCnt) { Array(colsCnt) { Wall() as Cavern } };
+        cavern = Array(rowsCnt) { Array(colsCnt) { Wall() as Cavern } }
 
         rows.forEachIndexed { i, s ->
             s.forEachIndexed { j, c ->
@@ -39,18 +39,38 @@ class ElvesAndGoblins(input: String) {
                     val enemies = getEnemies(cavern.entity!!.getEnemy())
 
                     val closest = getClosest(enemies, distances)
-                    //move
-                    if (closest != null) {
-                        val distancesFromClosest = getDistances(closest)
-                        val newCoords = getClosest(getNeighbors(coords), distancesFromClosest)
 
-                        if (newCoords != null) {
-                            cavernAt(newCoords).entity = cavern.entity
-                            cavernAt(coords).entity = null
-                            cavernAt(newCoords).entity?.done = true
+                    var currentCoords = coords
+
+                    //attack
+                    var adjacentEnemies = getAdjacentEnemies(currentCoords, cavernAt(currentCoords).entity!!.getEnemy())
+                    var chosenEnemy = chooseEnemy(adjacentEnemies)
+
+                    if (chosenEnemy != null) {
+                        attack(chosenEnemy, currentCoords)
+                    } else {
+                        //move
+                        if (closest != null) {
+                            val distancesFromClosest = getDistances(closest)
+                            val newCoords = getClosest(getNeighbors(coords), distancesFromClosest)
+
+                            if (newCoords != null) {
+                                cavernAt(newCoords).entity = cavern.entity
+                                cavernAt(coords).entity = null
+                                currentCoords = newCoords
+                            }
                         }
+
+                        //attack
+                        adjacentEnemies = getAdjacentEnemies(currentCoords, cavernAt(currentCoords).entity!!.getEnemy())
+                        chosenEnemy = chooseEnemy(adjacentEnemies)
+
+                        if (chosenEnemy != null) {
+                            attack(chosenEnemy, currentCoords)
+                        }
+
+                        cavernAt(currentCoords).entity?.done = true
                     }
-                    cavern.entity?.done = true
                 }
             }
         }
@@ -61,7 +81,17 @@ class ElvesAndGoblins(input: String) {
             }
         }
 
-        return printGame();
+        return printGame()
+    }
+
+    private fun attack(
+        chosenEnemy: Pair<Int, Int>,
+        currentCoords: Pair<Int, Int>
+    ) {
+        cavernAt(chosenEnemy).entity!!.hp -= cavernAt(currentCoords).entity?.attackPower ?: 0
+        if (cavernAt(chosenEnemy).entity!!.hp <= 0) {
+            cavernAt(chosenEnemy).entity = null
+        }
     }
 
     fun printGame(): String {
@@ -76,7 +106,7 @@ class ElvesAndGoblins(input: String) {
     }
 
     private fun addEntity(cavern: Cavern, entity: Entity) {
-        cavern.entity = entity;
+        cavern.entity = entity
     }
 
     fun getEmptySquaresOfEntity(coords: Pair<Int, Int>, entity: String): List<Pair<Int, Int>> {
@@ -171,6 +201,20 @@ class ElvesAndGoblins(input: String) {
 
     private fun getFirstInReadingOrder(coords: List<Pair<Int, Int>>): Pair<Int, Int>? {
         return coords.sortedWith(compareBy({ it.first }, { it.second })).first()
+    }
+
+    private fun getAdjacentEnemies(currentCoords: Pair<Int, Int>, enemy: String): List<Pair<Int, Int>> {
+        return getNeighbors(currentCoords).filter { cavernAt(it).hasEntity(enemy) }
+    }
+
+    private fun chooseEnemy(adjacentEnemies: List<Pair<Int, Int>>): Pair<Int, Int>? {
+        val sorted = adjacentEnemies.sortedBy { cavernAt(it).entity?.hp }
+        if (sorted.isEmpty()) {
+            return null
+        }
+        val closesCoords = sorted.filter { cavernAt(it).entity?.hp == cavernAt(sorted.get(0)).entity?.hp }
+
+        return getFirstInReadingOrder(closesCoords)
     }
 
 }

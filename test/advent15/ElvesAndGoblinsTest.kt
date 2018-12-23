@@ -13,11 +13,11 @@ internal class ElvesAndGoblinsTest {
             "#.......#\n" +
             "#.......#\n" +
             "#G..G..G#\n" +
-            "#########";
+            "#########"
 
     @Test
     internal fun testMovement() {
-        val example = ElvesAndGoblins(example);
+        val example = ElvesAndGoblins(example)
         val roundOne = "#########\n" +
                 "#.G...G.#\n" +
                 "#...G...#\n" +
@@ -26,7 +26,7 @@ internal class ElvesAndGoblinsTest {
                 "#.......#\n" +
                 "#G..G..G#\n" +
                 "#.......#\n" +
-                "#########";
+                "#########"
         val roundTwo = "#########\n" +
                 "#..G.G..#\n" +
                 "#...G...#\n" +
@@ -44,15 +44,15 @@ internal class ElvesAndGoblinsTest {
                 "#......G#\n" +
                 "#.......#\n" +
                 "#.......#\n" +
-                "#########";
+                "#########"
         assertEquals(roundOne, example.performMovement())
         assertEquals(roundTwo, example.performMovement())
-//        assertEquals(roundThree, example.performMovement())
+        assertEquals(roundThree, example.performMovement())
     }
 
     @Test
     internal fun testInit() {
-        val example = ElvesAndGoblins(example);
+        val example = ElvesAndGoblins(example)
         assertEquals(this.example, example.printGame())
     }
 }
