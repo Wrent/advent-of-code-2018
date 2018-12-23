@@ -1,12 +1,12 @@
 package advent15
 
-class ElvesAndGoblins(input: String) {
-    var cavern: Array<Array<Cavern>>
-    val rowsCnt: Int
-    val colsCnt: Int
+class ElvesAndGoblins(val input: String) {
+    var cavern: Array<Array<Cavern>> = emptyArray()
+    var rowsCnt: Int = 0
+    var colsCnt: Int = 0
+    var elfDied = false
 
-
-    init {
+    fun init(input: String, elfAttackPower: Int) {
         val rows = input.split("\n")
         rowsCnt = rows.size
         colsCnt = rows[0].length
@@ -24,13 +24,20 @@ class ElvesAndGoblins(input: String) {
                     addEntity(cavern[i][j], Goblin())
                 } else if (c == 'E') {
                     cavern[i][j] = Cave()
-                    addEntity(cavern[i][j], Elf())
+                    addEntity(cavern[i][j], Elf(elfAttackPower))
                 }
             }
         }
     }
 
-    fun performMovement(): String {
+
+    fun roundAndPrint(): String {
+        init(input, 3)
+        round()
+        return printGame()
+    }
+
+    private fun round() {
         cavern.forEachIndexed { i, row ->
             row.forEachIndexed { j, cavern ->
                 if (cavern.hasEntity() && cavern.entity?.done != true) {
@@ -80,18 +87,6 @@ class ElvesAndGoblins(input: String) {
                 cavern.entity?.done = false
             }
         }
-
-        return printGame()
-    }
-
-    private fun attack(
-        chosenEnemy: Pair<Int, Int>,
-        currentCoords: Pair<Int, Int>
-    ) {
-        cavernAt(chosenEnemy).entity!!.hp -= cavernAt(currentCoords).entity?.attackPower ?: 0
-        if (cavernAt(chosenEnemy).entity!!.hp <= 0) {
-            cavernAt(chosenEnemy).entity = null
-        }
     }
 
     fun printGame(): String {
@@ -103,6 +98,71 @@ class ElvesAndGoblins(input: String) {
             sb.append("\n")
         }
         return sb.toString().trim()
+    }
+
+    fun getOutcome(elfAttackPower: Int): Int {
+        init(input, elfAttackPower)
+        var roundCnt = 0
+
+        do {
+            roundCnt++
+            round()
+        } while (shouldContinue())
+
+        println(printGame())
+        println("rounds: $roundCnt")
+        val sumHPs = sumHPs()
+        println("sum: $sumHPs")
+        return roundCnt * sumHPs
+    }
+
+    fun getOutcomeImproved(): Int {
+        var attackPower = 4
+        var outcome: Int
+
+        do {
+            elfDied = false
+            outcome = getOutcome(attackPower)
+            println("Attack power: $attackPower")
+            attackPower++
+        } while (elfDied)
+
+        return outcome
+    }
+
+    private fun goblinsWon(): Boolean {
+        val caves = cavern.asList().flatMap { it.asList() }
+        val elves = caves.filter { it.hasEntity("E") }.count()
+
+        return elves == 0
+    }
+
+    private fun sumHPs(): Int {
+        return cavern.asList().flatMap { it.asList() }
+            .filter { it.hasEntity() }
+            .map { it.entity?.hp ?: 0 }
+            .sum()
+    }
+
+    private fun shouldContinue(): Boolean {
+        val caves = cavern.asList().flatMap { it.asList() }
+        val elves = caves.filter { it.hasEntity("E") }.count()
+        val goblins = caves.filter { it.hasEntity("G") }.count()
+
+        return !(elves == 0 || goblins == 0)
+    }
+
+    private fun attack(
+        chosenEnemy: Pair<Int, Int>,
+        currentCoords: Pair<Int, Int>
+    ) {
+        cavernAt(chosenEnemy).entity!!.hp -= cavernAt(currentCoords).entity?.attackPower ?: 0
+        if (cavernAt(chosenEnemy).entity!!.hp <= 0) {
+            if (cavernAt(chosenEnemy).entity?.printChar.equals("E")) {
+                elfDied = true
+            }
+            cavernAt(chosenEnemy).entity = null
+        }
     }
 
     private fun addEntity(cavern: Cavern, entity: Entity) {
