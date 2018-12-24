@@ -78,7 +78,7 @@ class TimeMachineInstructions(input: String) {
         val matchResult = regex.find(instructions)
         val (opcode, a, b, c) = matchResult!!.destructured
 
-        return Instruction(parseInt(opcode), parseInt(a), parseInt(b), parseInt(c))
+        return Instruction(parseInt(opcode), parseInt(a), parseInt(b), parseInt(c), "")
     }
 
     fun executeProgram(input: String): Int {
