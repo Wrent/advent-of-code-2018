@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 internal class WaterResearchTest {
+
     @Test
     internal fun testExample() {
         val input = "x=495, y=2..7\n" +
