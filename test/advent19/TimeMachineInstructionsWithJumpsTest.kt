@@ -47,6 +47,134 @@ internal class TimeMachineInstructionsWithJumpsTest {
         println(TimeMachineInstructionsWithJumps(FileUtils.readFileDirectlyAsText("inputData/advent19.txt")).getFinalValueInRegisterZeroSecond())
     }
 
+
+    @Test
+    @Disabled
+    internal fun result21() {
+        println(TimeMachineInstructionsWithJumps(FileUtils.readFileDirectlyAsText("inputData/advent21.txt")).getLowestZeroRegisterVal())
+    }
+
+
+    @Test
+    @Disabled
+    internal fun result21_1() {
+        var zero = 0
+        var one = 0
+        var two = 0
+        var three = 0
+        var four = 0
+        var five = 0
+
+        three = 123
+        one++
+        three = three and 456
+        one++
+        if (three == 72) {
+            three = 1
+        } else {
+            three = 0
+        }
+        one++
+
+        one += three
+        one++
+
+        three = 0
+        one++
+
+        five = three or 65536
+        one++
+
+        three = 15028787
+        one++
+
+        two = five and 255
+        one++
+
+        three += two
+        one++
+
+        three = three and 16777215
+        one++
+
+        three *= 65899
+        one++
+
+        three = three and 16777215
+        one++
+
+        if (256 > five) {
+            two = 1
+        } else {
+            two = 0
+        }
+        one++
+
+        one += two
+        one++
+
+        one += 1 // tohle by se vynechalo, kdyby bylo 65536 v petce mensi nez 256
+        one++ // a misto toho by se skocilo na eqrr 3 0 2
+
+
+        two = 0
+        one++
+
+        four = two + 1
+        one++
+
+        four *= 256
+        one++
+
+        if (four > five) {
+            four = 1
+        } else {
+            four = 0
+        }
+        one++
+
+        one += four
+        one++
+
+        one += 1 // tohle by se vynechalo, kdyby bylo 65536 v petce mensi nez 256 ve ctyrce
+        one++ // a misto toho by se skocilo na setr 2 4 5
+
+        two += 1
+        one++
+
+        one =
+                17 // skok na addi 2 1 4 (takze misto nuly je ctyrka 2, takze pak je razem 512 a takhle nam poroste az k 65536
+        one++
+
+
+        // skok na setr 2 4 5
+        five = two // two by ted melo nejspis byt 255
+        one++
+
+        one = 7
+        one++ // skok na osm, tedy bani 5 255 2
+
+
+//        one = 27 // skok na eqrr 3 0 2
+//        one++
+//
+//        if (zero == three) {
+//            two = 1
+//        } else {
+//            two = 0
+//        }
+//        one++
+//
+//        one += two
+
+        println((((255L + 6196817L) and 16777215L) * 65899L) and 16777215L)
+
+
+        println(zero.toString() + " " + one + " " + two + " " + three + " " + four + " " + five)
+
+    }
+
+
     @Test
     @Disabled
     internal fun result4() {

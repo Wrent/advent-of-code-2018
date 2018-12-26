@@ -91,13 +91,22 @@ class Eqir : Operation() {
 }
 
 class Eqri : Operation() {
+
     override fun perform(registers: Registers, a: Int, b: Int, c: Int): Registers {
+
         return registers.write(c, registers.read(a) == b)
     }
 }
 
 class Eqrr : Operation() {
+    val encountered = HashSet<Int>()
+
     override fun perform(registers: Registers, a: Int, b: Int, c: Int): Registers {
+        if (!encountered.contains(registers.read(a))) {
+            println(registers.read(a))
+            encountered.add(registers.read(a))
+        }
+
         return registers.write(c, registers.read(a) == registers.read(b))
     }
 }

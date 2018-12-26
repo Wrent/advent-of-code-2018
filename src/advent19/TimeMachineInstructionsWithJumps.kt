@@ -8,6 +8,7 @@ class TimeMachineInstructionsWithJumps(input: String) {
     val instructionPointer: Int
     val instructions: MutableList<Instruction>
     var registers: Registers = Registers(0, 0, 0, 0, 0, 0)
+    var instructionsCnt = 0
 
     val operations: Map<String, Operation> =
         mapOf(
@@ -47,34 +48,41 @@ class TimeMachineInstructionsWithJumps(input: String) {
     }
 
     fun getFinalValueInRegisterZero(): Int {
-        var print = true
+        execute()
+        return registers.read(0)
+    }
+
+    fun execute() {
+        val print = false
         var pointer = registers.read(instructionPointer)
         while (pointer >= 0 && pointer < instructions.size) {
             registers = registers.write(instructionPointer, pointer)
             val instruction = instructions.get(pointer)
+            instructionsCnt++
             if (print) {
                 println(registers)
                 println(pointer.toString() + " " + instruction)
             }
             val operation = operations.get(instruction.instruction)
             registers = operation!!.perform(registers, instruction.a, instruction.b, instruction.c)
-//            if (registers.read(3) == 20) {
-//                registers = registers.write(3, 10551387)
-//                print = true
-//
-//            }
-//            if (registers.read(5) == 261) {
-//                registers = registers.write(5, 10551386)
-//            }
             pointer = registers.read(instructionPointer)
             pointer++
         }
-        return registers.read(0)
     }
 
     fun getFinalValueInRegisterZeroSecond(): Any? {
         registers = registers.write(0, 1)
         return getFinalValueInRegisterZero()
+    }
+
+    fun getLowestZeroRegisterVal() {
+//        for (i in 0..100) {
+        val i = 6196817
+        registers.write(0, i)
+        instructionsCnt = 0
+        execute()
+        println(i.toString() + ", " + instructionsCnt)
+//        }
     }
 
 //    #ip 4
